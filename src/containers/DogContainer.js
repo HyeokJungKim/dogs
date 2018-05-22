@@ -7,11 +7,9 @@ class DogContainer extends Component{
   state = {dogs:[]}
 
   howManyDogs = (num) => {
-    let arr = []
-    for (var i = 0; i < parseInt(num); i++) {
-      arr.push(<Dog key={uuid()}></Dog>)
-    }
-    this.setState({dogs: arr})
+    fetch(`https://dog.ceo/api/breeds/image/random/${num}`)
+      .then(res => res.json())
+      .then(json => this.setState({dogs:json.message}))
   }
 
   reset = () => {
@@ -19,12 +17,16 @@ class DogContainer extends Component{
   }
 
   render(){
+    const dogs = this.state.dogs.map((dog) => {
+      return <Dog link={dog}></Dog>
+    })
+    
     return(
       <div>
         <button onClick={this.reset}>Reset Dogs</button>
         <DogForm howManyDogs={this.howManyDogs}></DogForm>
         <br/>
-        {this.state.dogs}
+        {dogs}
       </div>
     )
   }
